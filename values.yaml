@@ -137,4 +137,4 @@ db:
     database: customers
 
   persistence:
-    capacity: 5Gi
+    capacity: 2Gi
