@@ -1,12 +1,15 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "customers-db.name" . }}
+  name: {{ include "customersdb.name" . }}
   labels:
-    {{- include "customers-db.labels" . | nindent 4 }}
+    {{- include "customersdb.labels" . | nindent 4 }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.db.persistence.capacity }}
+      storage: {{ .Values.db.persistence.capacity }}    
+  storageClassName: lvms-vg1 # delete this !!
+
+     
