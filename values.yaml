@@ -80,9 +80,9 @@ db:
   replicaCount: 1
 
   image: 
-    repository: quay.io/cloud-architecture-workshop/customer-db
+    repository: registry.redhat.io/rhel9/postgresql-16
     pullPolicy: IfNotPresent
-    tag: 13-el8
+    tag: 9.5
 
   podSecurityContext: 
     runAsNonRoot: true
