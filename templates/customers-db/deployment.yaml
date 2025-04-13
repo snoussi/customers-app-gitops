@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "customersdb.name" . }}
+  labels:
+    {{- include "customersdb.labels" . | nindent 4 }}
+    app.openshift.io/runtime: postgresql
+spec:
+  replicas: {{ .Values.db.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "customersdb.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      {{- with .Values.db.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "customersdb.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.db.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ include "customersdb.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.db.image.pullPolicy }}
+          ports:
+            - name: postgresql
+              containerPort: {{ .Values.db.service.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.db.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.db.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.db.resources | nindent 12 }}
+          env:
+            - name: POSTGRESQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: {{ include "customersdb.name" . }}
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: {{ include "customersdb.name" . }}
+            - name: POSTGRESQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: {{ include "customersdb.name" . }}
+            - name: POSTGRESQL_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-admin-password
+                  name: {{ include "customersdb.name" . }}
+          volumeMounts:
+            - name: "{{ include "customersdb.name" . }}-volume"
+              mountPath: "/var/lib/pgsql/data"
+              volumes:
+          securityContext:
+            {{- toYaml .Values.db.securityContext | nindent 12 }}
+      volumes:
+        - name: "{{ include "customersdb.name" . }}-volume"
+          persistentVolumeClaim:
+            claimName: {{ include "customersdb.name" . }}
