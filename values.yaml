@@ -77,8 +77,6 @@ tolerations: []
 affinity: {}
 
 db:
-  nameOverride: "db"
-  fullnameOverride: ""
   replicaCount: 1
 
   image: 
