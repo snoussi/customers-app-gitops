@@ -12,9 +12,9 @@ replicaCount: 1
 image:
   pullPolicy: Always
   registry: Quay
-  host: {{ gitea_customize_quay_server }}
-  organization: quayadmin
-  name: customers-{{ gitea_customize_lab_username }}
+  # host: {{ gitea_customize_quay_server }}
+  # organization: quayadmin
+  # name: customers-{{ gitea_customize_lab_username }}
   # Overrides the image tag whose default is the chart appVersion.
 
 imagePullSecrets: []

@@ -105,6 +105,7 @@ Common labels
 */}}
 {{- define "customers-db.labels" -}}
 helm.sh/chart: {{ include "customers-db.chart" . }}
+app.openshift.io/runtime: postgresql
 {{ include "customers-db.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
