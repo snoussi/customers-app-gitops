@@ -72,7 +72,7 @@ Create the name of the service account to use
 Expand the name of the chart.
 */}}
 {{- define "customersdb.name" -}}
-{{- default .Chart.Name .Values.db.nameOverride "-db" | trunc 63 | trimSuffix "-" }}
+{{- default .Chart.Name .Values.db.nameOverride | trunc 63 | trimSuffix "-" }}-db
 {{- end }}
 
 {{/*
