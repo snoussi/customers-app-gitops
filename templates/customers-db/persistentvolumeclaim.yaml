@@ -10,6 +10,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.db.persistence.capacity }}    
-  storageClassName: lvms-vg1 # delete this !!
 
      
