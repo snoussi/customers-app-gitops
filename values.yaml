@@ -1,0 +1,142 @@
+# Default values for customer-service
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace:
+  enabled: true
+  argocd:
+    name: default
+
+replicaCount: 1
+
+image:
+  pullPolicy: Always
+  registry: Quay
+  host: {{ gitea_customize_quay_server }}
+  organization: quayadmin
+  name: customers-{{ gitea_customize_lab_username }}
+  # Overrides the image tag whose default is the chart appVersion.
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+route:
+  host: ""
+  path: /
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+db:
+  nameOverride: "db"
+  fullnameOverride: ""
+  replicaCount: 1
+
+  image: 
+    repository: quay.io/cloud-architecture-workshop/customer-db
+    pullPolicy: IfNotPresent
+    tag: 13-el8
+
+  podSecurityContext: 
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+  podAnnotations: {}
+
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  livenessProbe:
+    timeoutSeconds: 1
+    initialDelaySeconds: 5
+    tcpSocket:
+      port: 5432
+
+  readinessProbe:
+    timeoutSeconds: 1
+    initialDelaySeconds: 5
+    exec:
+      command:
+      - "/bin/sh"
+      - "-i"
+      - "-c"
+      - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
+
+  service:
+    portName: postgresql
+    port: 5432
+    containerPort: 5432
+
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  pgsql:
+    user: dbuser
+    password: dbuserpwd
+    database: customers
+
+  persistence:
+    capacity: 5Gi
