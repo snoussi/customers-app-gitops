@@ -30,12 +30,12 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           # image: {{ .Values.image.host }}/quayadmin/{{ .Values.image.name }}
-          image: {{ include "customers.image" . }}        
-          imagePullPolicy: {{ .Values.image.pullPolicy }}          
+          image: {{ include "customers.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
-              protocol: TCP          
+              protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           readinessProbe:
