@@ -23,7 +23,6 @@ metadata:
   labels:
     {{- include "customers.labels" . | nindent 4 }}  
     app.kubernetes.io/name: {{ include "customers.name" . }}
-    app.kubernetes.io/managed-by: quarkus
   name: {{ include "customers.name" . }}
 spec:
   lookupPolicy:
