@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "customers.name" . }}
+  labels:
+    {{- include "customers.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "customers.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "customers.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "customers.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "customers.name" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          # image: {{ .Values.image.host }}/quayadmin/{{ .Values.image.name }}
+          image: {{ include "customers.image" . }}        
+          imagePullPolicy: {{ .Values.image.pullPolicy }}          
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP          
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe:
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            httpGet:
+              path: {{ .Values.readinessProbe.httpGet.path }}
+              port:  {{ .Values.service.targetPort }}
+              scheme: {{ .Values.readinessProbe.httpGet.scheme }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          startupProbe:
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            httpGet:
+              path: {{ .Values.startupProbe.httpGet.path }}
+              port:  {{ .Values.service.targetPort }}
+              scheme: {{ .Values.startupProbe.httpGet.scheme }}
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+          livenessProbe:
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            httpGet:
+              path: {{ .Values.livenessProbe.httpGet.path }}
+              port: {{ .Values.service.targetPort }}
+              scheme: {{ .Values.livenessProbe.httpGet.scheme }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          env:
+            - name: JAVA_APP_JAR
+              value: {{ .Values.app.envs.JAVA_APP_JAR | quote }}
+            - name: QUARKUS_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: {{ include "customersdb.name" . }}
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: {{ include "customersdb.name" . }}
+            - name: POSTGRESQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: {{ include "customersdb.name" . }}
+            - name: QUARKUS_DATASOURCE_JDBC_URL
+              value: jdbc:postgresql://{{ include "customersdb.name" . }}:5432/${POSTGRESQL_DATABASE}

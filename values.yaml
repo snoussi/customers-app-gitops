@@ -13,13 +13,17 @@ build:
   openjdk17:
     builderImage: registry.access.redhat.com/ubi8/openjdk-17  
 
+
 image:
   pullPolicy: Always
-  registry: Quay
+  tag: latest
+  name: customers-service
+  # registry: Quay
   # host: {{ gitea_customize_quay_server }}
   # organization: quayadmin
-  # name: customers-{{ gitea_customize_lab_username }}
+  # name: customers-service{{ gitea_customize_lab_username }}
   # Overrides the image tag whose default is the chart appVersion.
+
 
 imagePullSecrets: []
 nameOverride: ""
@@ -27,7 +31,7 @@ fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
@@ -49,7 +53,9 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8080
+  portName: http
+  port: 80
+  targetPort: 8080
 
 route:
   host: ""
@@ -67,20 +73,38 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+livenessProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /q/health/live
+    scheme: HTTP
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 10
 
-nodeSelector: {}
+readinessProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /q/health/ready
+    scheme: HTTP
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 10
 
-tolerations: []
+startupProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /q/health/started
+    scheme: HTTP
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 10
 
-affinity: {}
-
-
+envs:
+  JAVA_APP_JAR: /deployments/quarkus-run.jar
 
 
 db:

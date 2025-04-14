@@ -4,7 +4,6 @@ metadata:
   name: {{ include "customersdb.name" . }}
   labels:
     {{- include "customersdb.labels" . | nindent 4 }}
-    app.openshift.io/runtime: postgresql
 spec:
   replicas: {{ .Values.db.replicaCount }}
   selector:
@@ -25,7 +24,7 @@ spec:
         {{- toYaml .Values.db.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "customersdb.serviceAccountName" . }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "customersdb.name" . }}
           image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag }}"
           imagePullPolicy: {{ .Values.db.image.pullPolicy }}
           ports:
