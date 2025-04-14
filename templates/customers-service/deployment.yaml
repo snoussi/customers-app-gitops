@@ -69,8 +69,8 @@ spec:
             successThreshold: {{ .Values.livenessProbe.successThreshold }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           env:
-            - name: JAVA_APP_JAR
-              value: {{ .Values.envs.JAVA_APP_JAR | quote }}
+            # - name: JAVA_APP_JAR
+            #   value: {{ .Values.envs.JAVA_APP_JAR | quote }}
             - name: QUARKUS_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
