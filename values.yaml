@@ -11,7 +11,7 @@ replicaCount: 1
 
 build:
   openjdk17:
-    builderImage: fabric8/s2i-javaregistry.access.redhat.com/ubi8/openjdk-17
+    builderImage: registry.access.redhat.com/ubi8/openjdk-17
 
 
 image:

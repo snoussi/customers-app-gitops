@@ -9,9 +9,10 @@ metadata:
     app.quarkus.io/vcs-uri: https://github.com/snoussi/customers-service.git
     app.quarkus.io/build-timestamp: 2025-04-14 - 10:10:56 +0000
   labels:
-    {{- include "customers.labels" . | nindent 4 }}  
-    app.kubernetes.io/name: {{ include "customers.name" . }}
+    app.kubernetes.io/name: customers-service
+    app.kubernetes.io/version: 1.0.0
     app.kubernetes.io/managed-by: quarkus
+    app.openshift.io/runtime: quarkus
   name: {{ include "customers.name" . }}
 spec:
   output:
