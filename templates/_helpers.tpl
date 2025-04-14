@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "customers.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}-service
 {{- end }}
 
 {{/*
@@ -12,9 +12,9 @@ If release name contains chart name it will be used as a full name.
 */}}
 {{- define "customers.fullname" -}}
 {{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}-service
 {{- else }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}-service
 {{- end }}
 {{- end }}
 
@@ -82,13 +82,13 @@ If release name contains chart name it will be used as a full name.
 */}}
 {{- define "customersdb.fullname" -}}
 {{- if .Values.db.fullnameOverride }}
-{{- .Values.db.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- .Values.db.fullnameOverride | trunc 63 | trimSuffix "-" }}-db
 {{- else }}
-{{- $name := default .Chart.Name .Values.db.nameOverride }}
+{{- $name := default .Chart.Name .Values.db.nameOverride }}-db
 {{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}-db
 {{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}-db
 {{- end }}
 {{- end }}
 {{- end }}

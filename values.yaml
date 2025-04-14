@@ -9,6 +9,10 @@ namespace:
 
 replicaCount: 1
 
+build:
+  openjdk17:
+    builderImage: registry.access.redhat.com/ubi8/openjdk-17  
+
 image:
   pullPolicy: Always
   registry: Quay
@@ -75,6 +79,9 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+
 
 db:
   replicaCount: 1
