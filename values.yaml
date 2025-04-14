@@ -16,7 +16,7 @@ build:
 
 image:
   pullPolicy: Always
-  tag: latest
+  tag: 1.0.0
   name: customers-service
   host: image-registry.openshift-image-registry.svc:5000
   organization: customers-user1
