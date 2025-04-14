@@ -18,10 +18,12 @@ image:
   pullPolicy: Always
   tag: latest
   name: customers-service
+  host: image-registry.openshift-image-registry.svc:5000
+  organization: customers-user1
   # registry: Quay
   # host: {{ gitea_customize_quay_server }}
   # organization: quayadmin
-  # name: customers-service{{ gitea_customize_lab_username }}
+  # name: customers-service-{{ gitea_customize_lab_username }}
   # Overrides the image tag whose default is the chart appVersion.
 
 
