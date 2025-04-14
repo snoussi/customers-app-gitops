@@ -70,7 +70,7 @@ spec:
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           env:
             - name: JAVA_APP_JAR
-              value: {{ .Values.app.envs.JAVA_APP_JAR | quote }}
+              value: {{ .Values.envs.JAVA_APP_JAR | quote }}
             - name: QUARKUS_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
