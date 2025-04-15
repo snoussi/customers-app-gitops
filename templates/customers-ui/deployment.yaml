@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "customers-ui.fullname" . }}
+  name: {{ include "customersui.fullname" . }}
   labels:
-    {{- include "customers-ui.labels" . | nindent 4 }}
+    {{- include "customersui.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.ui.replicaCount }}
   selector:
     matchLabels:
-      {{- include "customers-ui.selectorLabels" . | nindent 6 }}
+      {{- include "customersui.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "customers-ui.labels" . | nindent 8 }}
+        {{- include "customersui.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}

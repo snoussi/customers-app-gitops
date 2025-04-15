@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "customers-ui.fullname" . }}
+  name: {{ include "customersui.fullname" . }}
   labels:
-    {{- include "customers-ui.labels" . | nindent 4 }}
+    {{- include "customersui.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.ui.service.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "customers-ui.selectorLabels" . | nindent 4 }}
+    {{- include "customersui.selectorLabels" . | nindent 4 }}
