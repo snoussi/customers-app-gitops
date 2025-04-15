@@ -1,0 +1,23 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "customers-ui.fullname" . }}
+  labels:
+    {{- include "customers-ui.labels" . | nindent 4 }}
+    router: internal
+spec:
+  {{- if .host }}
+  host: {{ .host }}
+  {{- end }}
+  {{- if .path }}
+  path: {{ .path }}
+  {{- end }}
+  port:
+    targetPort: 80
+  to:
+    kind: Service
+    name: {{ include "customers-ui.fullname" . }}
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
