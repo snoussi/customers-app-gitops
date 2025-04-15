@@ -13,7 +13,7 @@ spec:
   path: {{ .path }}
   {{- end }}
   port:
-    targetPort: 80
+    targetPort: http
   to:
     kind: Service
     name: {{ include "customersui.name" . }}
