@@ -1,7 +1,7 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ include "customersui.fullname" . }}
+  name: {{ include "customersui.name" . }}
   labels:
     {{- include "customersui.labels" . | nindent 4 }}
     router: internal
@@ -16,7 +16,7 @@ spec:
     targetPort: 80
   to:
     kind: Service
-    name: {{ include "customersui.fullname" . }}
+    name: {{ include "customersui.name" . }}
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
